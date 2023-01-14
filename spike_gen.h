@@ -1,0 +1,22 @@
+#ifndef SPIKE_GEN_H_
+#define SPIKE_GEN_H_
+
+#include <stdint.h>
+
+#define RATE_IN_S 0.05
+#define RATE_IN_MS 50.0
+#define RATE_STD_DEV 2.5
+
+#define NUM_SIMS 1
+#define NUM_TS 1000
+
+void init_rng(void);
+float rand_float(float min, float max);
+
+int spiked();
+void generate_spikes(uint8_t spikes[], uint32_t num_ts);
+void reset_sim_arrs(float times[], uint8_t spikes[], uint32_t num_ts);
+void print_spikes(uint8_t spikes[], uint32_t num_ts);
+
+#endif /* SPIKE_GEN_H_ */
+
