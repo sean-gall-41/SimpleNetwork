@@ -36,7 +36,7 @@ extern "C" {
 #define JSMN_API extern
 #endif
 
-#define DEFAULT_KEY_LEN 12
+#define DEFAULT_KEY_LEN 18
 #define DEFAULT_VAL_LEN 6
 /**
  * JSON type identifier. Basic types are:
@@ -115,9 +115,9 @@ JSMN_API int jsmn_parse(jsmn_parser *parser, const char *js, const size_t len,
  *      3) parse the file string into the jsmntok_t arr
  *      4) profit
  */
-JSMN_API int jsmn_parse_file(const char *in_file_name, pair_t pairs[]);
+JSMN_API int jsmn_parse_file(const char *in_file_name, pair_t *pairs);
 
-JSMN_API char *get_val(const char *key, pair_t pairs[], size_t pairs_size);
+JSMN_API char *get_val(const char *key, pair_t *pairs, size_t pairs_size);
 
 #ifdef __cplusplus
 }

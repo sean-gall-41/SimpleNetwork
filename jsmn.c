@@ -367,7 +367,9 @@ JSMN_API void jsmn_init(jsmn_parser *parser) {
   parser->toksuper = -1;
 }
 
-JSMN_API int jsmn_parse_file(const char *in_file_name, pair_t pairs[])
+//FIXME: Calling this multiple times does not update jsmn_parser's pointer:
+// so something with previously written data gets corrupted
+JSMN_API int jsmn_parse_file(const char *in_file_name, pair_t *pairs)
 {
 	FILE *fp = fopen(in_file_name, "r");
 	if (fp == NULL)
@@ -384,7 +386,7 @@ JSMN_API int jsmn_parse_file(const char *in_file_name, pair_t pairs[])
 	}
 	fclose(fp);
 
-	jsmntok_t tokens[64];
+	jsmntok_t tokens[64] = {};
 	jsmn_parser p;
 	jsmn_init(&p);
 	int r = jsmn_parse(&p, char_buf, strlen(char_buf), tokens, 64);
@@ -418,12 +420,19 @@ JSMN_API int jsmn_parse_file(const char *in_file_name, pair_t pairs[])
 	return r;
 }
 
-JSMN_API char *get_val(const char *key, pair_t pairs[], size_t pairs_size)
+// NOTE: caller owns data
+// FIXME: if we're alloc'ing anyway, why not snprintf the length within the if statement?
+JSMN_API char *get_val(const char *key, pair_t *pairs, size_t pairs_size)
 {
-	char *return_val = (char *)calloc(DEFAULT_VAL_LEN, sizeof(char));
 	for (int i = 0; i < pairs_size; i++)
 	{
-		if (strcmp(key, pairs[i].key) == 0) return return_val;
+		if (strcmp(key, pairs[i].key) == 0)
+		{
+			int return_len = snprintf(NULL, 0, "%s", pairs[i].val);
+			char *return_val = (char *)calloc(return_len+1, sizeof(char));
+			strcpy(return_val, pairs[i].val);
+			return return_val;
+		}
 	}
 	return NULL;
 }

@@ -9,6 +9,11 @@
 
 void init_rng(void) {srand(time(NULL));}
 
+int rand_int(int min, int max)
+{
+	return rand() % (max - min) + min;
+}
+
 float rand_float(float min, float max)
 {
 	return ((float)rand() / RAND_MAX) * (max - min) + min;
@@ -19,17 +24,8 @@ int spiked()
 	return (rand_float(0.0, 1.0) < RATE_IN_S) ? 1 : 0;
 }
 
-void generate_spikes(uint8_t spikes[], uint32_t num_ts)
+void reset_spikes(uint8_t spikes[], uint32_t num_ts)
 {
-	for (int i = 0; i < num_ts; i++)
-	{
-		spikes[i] = (spiked() == 1) ? '\001' : '\000';
-	}
-}
-
-void reset_sim_arrs(float times[], uint8_t spikes[], uint32_t num_ts)
-{
-	memset(times, 0.0, num_ts * sizeof(float));
 	memset(spikes, '\000', num_ts * sizeof(uint8_t));
 }
 

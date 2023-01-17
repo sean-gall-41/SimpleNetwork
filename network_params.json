@@ -1,6 +1,6 @@
 {
-	"num_cells": "1000",
-	"max_num_input_per_cell": "16",
+	"num_cells": "4096",
+	"max_num_input_per_cell": "12",
 	"max_num_output_per_cell": "1",
 	"prob_poiss_input": "0.25"
 }
