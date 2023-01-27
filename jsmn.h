@@ -38,6 +38,7 @@ extern "C" {
 
 #define DEFAULT_KEY_LEN 18
 #define DEFAULT_VAL_LEN 6
+#define DEFAULT_NUM_PAIRS 6
 /**
  * JSON type identifier. Basic types are:
  * 	o Object
@@ -61,7 +62,9 @@ enum jsmnerr {
   /* The string is not a full JSON packet, more bytes expected */
   JSMN_ERROR_PART = -3,
   /* could not read from file */
-  JSMN_ERROR_FREAD = -4
+  JSMN_ERROR_FREAD = -4,
+  /* given string is not a valid object */
+  JSMN_ERROR_NON_OBJ = -5,
 };
 
 /**
@@ -95,6 +98,29 @@ typedef struct pair {
 	char val[DEFAULT_VAL_LEN];
 } pair_t;
 
+typedef struct object object_t;
+typedef struct gen_pair gen_pair_t;
+typedef union gen_val gen_val_t;
+
+union gen_val {
+	int val_int;
+	float val_float;
+	double val_double;
+	// in future: define array
+	char *val_str;
+	object_t *val_obj;
+};
+
+struct gen_pair {
+	char *key;
+	gen_val_t value;
+	jsmntype_t val_type;
+};
+
+struct object {
+	gen_pair_t *pairs;
+};
+
 /**
  * Create JSON parser over an array of tokens
  */
@@ -115,7 +141,7 @@ JSMN_API int jsmn_parse(jsmn_parser *parser, const char *js, const size_t len,
  *      3) parse the file string into the jsmntok_t arr
  *      4) profit
  */
-JSMN_API int jsmn_parse_file(const char *in_file_name, pair_t *pairs);
+JSMN_API int jsmn_parse_file(const char *in_file_name, object_t *file_obj_rep);
 
 JSMN_API char *get_val(const char *key, pair_t *pairs, size_t pairs_size);
 

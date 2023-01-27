@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "cell_pop.h"
 
+#define NUM_LAYERS 3
 #define NUM_NETWORK_PARAMS 4 /* not including arrays */
 
 /* three layer network model */

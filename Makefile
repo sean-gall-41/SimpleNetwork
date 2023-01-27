@@ -1,5 +1,5 @@
 TARGET = simp_network
-CFLAGS = -g -std=c99 $(shell pkg-config --cflags gtk+-3.0)
+CFLAGS = -g -std=c99 -D JSMN_PARENT_LINKS $(shell pkg-config --cflags gtk+-3.0)
 LIBS   = $(shell pkg-config --libs gtk+-3.0)
 LIBS  += -lm
 

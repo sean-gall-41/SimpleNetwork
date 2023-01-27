@@ -367,9 +367,48 @@ JSMN_API void jsmn_init(jsmn_parser *parser) {
   parser->toksuper = -1;
 }
 
-//FIXME: Calling this multiple times does not update jsmn_parser's pointer:
-// so something with previously written data gets corrupted
-JSMN_API int jsmn_parse_file(const char *in_file_name, pair_t *pairs)
+JSMN_API void prep_parents(jsmntok_t *tp, int curr_parent) {
+	while (tp->type != JSMN_UNDEFINED) {
+		if (tp->parent < curr_parent) curr_parent--;
+		tp->parent = curr_parent;
+		if (tp->type == JSMN_OBJECT)  curr_parent++;
+		tp++;
+	}
+}
+
+JSMN_API void jsmn_parse_file_recurse(jsmntok_t *tp,
+									  int parent,
+									  gen_pair_t *pp,
+									  char *char_buf) {
+	while (tp->type != JSMN_UNDEFINED)
+	{
+		if (tp->parent < parent) return;
+		if (tp->type == JSMN_STRING)
+		{
+			struct gen_pair *curr_pair = (struct gen_pair *)malloc(sizeof(struct gen_pair));
+			int key_len = tp->end - tp->start;
+			curr_pair->key = (char *)calloc(key_len, sizeof(char));
+			strncpy(curr_pair->key, char_buf + tp->start, key_len);
+			tp++;
+			if (tp->type == JSMN_OBJECT) {
+				jsmn_parse_file_recurse(++tp, (tp+1)->parent, curr_pair->value.val_obj->pairs, char_buf);
+				curr_pair->val_type = JSMN_OBJECT;
+			} else if (tp->type == JSMN_STRING) {
+				int val_len = tp->end - tp->start;
+				curr_pair->value.val_str = (char *)calloc(val_len, sizeof(char));
+				strncpy(curr_pair->value.val_str, char_buf + tp->start, val_len);
+				curr_pair->val_type = JSMN_STRING;
+			}
+			pp = curr_pair;
+			pp++; // where is the memory? We didnt alloc smdh
+		}
+		tp++;
+	}
+}
+
+JSMN_API void print_tokens(jsmntok_t *tp, char *char_buf);
+
+JSMN_API int jsmn_parse_file(const char *in_file_name, object_t *file_obj_rep)
 {
 	FILE *fp = fopen(in_file_name, "r");
 	if (fp == NULL)
@@ -393,35 +432,18 @@ JSMN_API int jsmn_parse_file(const char *in_file_name, pair_t *pairs)
 	if (r >= 0)
 	{
 		jsmntok_t *tp = tokens;
-		int pair_index = 0;
-		while (tp->type != JSMN_UNDEFINED)
-		{
-			if (tp->type == JSMN_STRING)
-			{
-				/* extract key */
-				//char *key, *val;
-				int key_len = tp->end - tp->start;
-				//key = (char *)calloc(key_len+1, sizeof(char));
-				strncpy(pairs[pair_index].key, char_buf + tp->start, key_len);
-				//strcpy(pairs[pair_index].key, key);
-				tp++;
-
-				/* extract val */
-				int val_len = tp->end - tp->start;
-				//val = (char *)calloc(key_len+1, sizeof(char));
-				strncpy(pairs[pair_index].val, char_buf + tp->start, val_len);
-				//strcpy(pairs[pair_index].key, key);
-				pair_index++;
-			}
-			tp++;
+		if (tp->type != JSMN_OBJECT) {
+			return JSMN_ERROR_NON_OBJ; 
 		}
+		prep_parents(tp, tp->parent);
+		//print_tokens(tp, char_buf);
+		//exit(0);
+		jsmn_parse_file_recurse(++tp, (tp+1)->parent, file_obj_rep->pairs, char_buf);
 		return 0;
 	}
 	return r;
 }
 
-// NOTE: caller owns data
-// FIXME: if we're alloc'ing anyway, why not snprintf the length within the if statement?
 JSMN_API char *get_val(const char *key, pair_t *pairs, size_t pairs_size)
 {
 	for (int i = 0; i < pairs_size; i++)
@@ -437,3 +459,21 @@ JSMN_API char *get_val(const char *key, pair_t *pairs, size_t pairs_size)
 	return NULL;
 }
 
+JSMN_API void print_tokens(jsmntok_t *tp, char *char_buf) {
+	while (tp->type != JSMN_UNDEFINED) {
+		if (tp->type == JSMN_STRING) {
+			int str_len = tp->end - tp->start + 1;
+			char *this_tok = (char *)calloc(str_len, sizeof(char));
+			strncpy(this_tok, char_buf + tp->start, str_len-1);
+			printf("type: %u, token: '%s', parent: %d\n", tp->type, this_tok, tp->parent);
+			free(this_tok);
+		} else if (tp->type == JSMN_OBJECT) {
+			printf("type: %u, token: '%s', parent: %d\n", tp->type, "OBJECT", tp->parent);
+		}
+		tp++;
+	}
+}
+
+//JSMN_API void free_object(struct object *obj) {
+//
+//}
