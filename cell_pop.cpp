@@ -5,33 +5,21 @@
 #include "cell_pop.h"
 #include "util.h"
 #include "str_util.h"
-#include "jsmn.h"
 #include "spike_gen.h"
 
-void init_cell_pop(struct cell_pop *model_cell_pop, pair_t *cell_pop_params, pair_t *cell_params)
+void init_cell_pop(struct cell_pop *model_cell_pop, json &cell_pop_params, json &cell_params)
 {
-	char *num_cells      = get_val("num_cells", cell_pop_params, NUM_CELL_POP_PARAMS);
-	char *max_num_input  = get_val("max_num_input", cell_pop_params, NUM_CELL_POP_PARAMS);
-	char *max_num_output = get_val("max_num_output", cell_pop_params, NUM_CELL_POP_PARAMS);
-	char *prob_input     = get_val("prob_input", cell_pop_params, NUM_CELL_POP_PARAMS);
-	char *prob_output    = get_val("prob_output", cell_pop_params, NUM_CELL_POP_PARAMS);
-
-	model_cell_pop->num_cells      = str_to_int(num_cells);
-	model_cell_pop->max_num_input  = str_to_int(max_num_input);
-	model_cell_pop->max_num_output = str_to_int(max_num_output);
-	model_cell_pop->prob_input     = str_to_float(prob_input);
-	model_cell_pop->prob_output    = str_to_float(prob_output);
+	model_cell_pop->num_cells      = cell_pop_params["num_cells"];
+	model_cell_pop->max_num_input  = cell_pop_params["max_num_input"];
+	model_cell_pop->max_num_output = cell_pop_params["max_num_output"];
+	model_cell_pop->prob_input     = cell_pop_params["prob_input"];
+	model_cell_pop->prob_output    = cell_pop_params["prob_output"];
 	
 	init_cell_pop_arrs(model_cell_pop, cell_params);
 
-	free(num_cells);
-	free(max_num_input);
-	free(max_num_output);
-	free(prob_input);
-	free(prob_output);  
 }
 
-void init_cell_pop_arrs(struct cell_pop *model_cell_pop, pair_t *cell_params)
+void init_cell_pop_arrs(struct cell_pop *model_cell_pop, json &cell_params)
 {
 	model_cell_pop->inputs = (uint32_t *)calloc(model_cell_pop->max_num_input * model_cell_pop->num_cells, sizeof(uint32_t));
 	model_cell_pop->outputs = (uint32_t *)calloc(model_cell_pop->max_num_output * model_cell_pop->num_cells, sizeof(uint32_t));

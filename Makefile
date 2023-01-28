@@ -1,17 +1,18 @@
 TARGET = simp_network
-CFLAGS = -g -std=c99 -D JSMN_PARENT_LINKS $(shell pkg-config --cflags gtk+-3.0)
+CPP=g++
+CPPFLAGS = -g -std=c++11 $(shell pkg-config --cflags gtk+-3.0)
 LIBS   = $(shell pkg-config --libs gtk+-3.0)
 LIBS  += -lm
 
-OBJS   = $(patsubst %.c,%.o,$(wildcard *.c))
+OBJS   = $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 
 .PHONY: clean
 
 $(TARGET): $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
+	$(CPP) -g $(LDFLAGS) -o $@ $^ $(LIBS)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $^
+%.o: %.cpp
+	$(CPP) $(CPPFLAGS) -o $@ -c $^
 
 clean:
 	$(RM) $(TARGET) $(OBJS)

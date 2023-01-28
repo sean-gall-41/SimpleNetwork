@@ -19,8 +19,8 @@ struct cell_pop
 	struct cell *cells;
 };
 
-void init_cell_pop(struct cell_pop *model_cell_pop, pair_t *cell_pop_params, pair_t *cell_params);
-void init_cell_pop_arrs(struct cell_pop *model_cell_pop, pair_t *cell_params);
+void init_cell_pop(struct cell_pop *model_cell_pop, json &cell_pop_params, json &cell_params);
+void init_cell_pop_arrs(struct cell_pop *model_cell_pop, json &cell_params);
 void calc_cell_pop_poiss_step(struct cell_pop *input_pop, uint32_t ts);
 void calc_cell_pop_act_step(struct cell_pop *in_cell_pop, struct cell_pop *curr_cell_pop, uint32_t ts);
 void free_cell_pop_arrs(struct cell_pop *model_cell_pop);

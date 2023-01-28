@@ -1,17 +1,16 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "set.h"
-#include "network.h"
+#include "simple_network.h"
 #include "util.h"
 #include "str_util.h"
-#include "jsmn.h"
 #include "spike_gen.h"
 
-void init_network(struct network *model_network, pair_t *cell_pop_params, pair_t *cell_params)
+void init_network(struct network *model_network, json &cell_pop_params, json &cell_params)
 {
-	init_cell_pop(&(model_network->input_layer), cell_pop_params, cell_params);
-	init_cell_pop(&(model_network->main_layer), cell_pop_params, cell_params);
-	init_cell_pop(&(model_network->output_layer), cell_pop_params, cell_params);
+	init_cell_pop(&(model_network->input_layer), cell_pop_params["input"], cell_params);
+	init_cell_pop(&(model_network->main_layer), cell_pop_params["hidden_1"], cell_params);
+	init_cell_pop(&(model_network->output_layer), cell_pop_params["output"], cell_params);
 }
 
 static void init_cell_pop_input_connections(struct cell_pop *pre_layer, struct cell_pop *curr_layer)

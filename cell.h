@@ -2,7 +2,9 @@
 #define CELL_H_
 
 #include <stdint.h>
-#include "jsmn.h"
+#include "json.h"
+
+using json = nlohmann::json;
 
 #define NUM_CELL_PARAMS 10
 
@@ -26,7 +28,7 @@ struct cell
 	uint32_t total_input;
 };
 
-void init_cell(struct cell *in_cell, pair_t cell_params[]);
+void init_cell(struct cell *in_cell, json &cell_params);
 void calc_cell_spike(struct cell *in_cell, float prev_ts, float step_size);
 float conductance_sum(struct cell *in_cell, float prev_ts, float prev_v);
 
