@@ -4,33 +4,36 @@
 #include <fstream>
 #include "spike_gen.h"
 #include "json.h"
-#include "simple_network.h"
+#include "simulation.h"
 
-#define INPUT_CELL_FILE_NAME "cell_params.json"
-#define INPUT_CELL_POP_FILE_NAME "cell_pop_params.json"
+#define INPUT_SIM_FILENAME "simulation_params.json"
 
 int main(int argc, char **argv)
 {
-	std::ifstream cell_param_buf(INPUT_CELL_FILE_NAME);
-	json cell_params = json::parse(cell_param_buf);
-	cell_param_buf.close();
+	std::ifstream sim_param_buf(INPUT_SIM_FILENAME);
+	json sim_params = json::parse(sim_param_buf);
+	sim_param_buf.close();
 
-	std::ifstream cell_pop_param_buf(INPUT_CELL_POP_FILE_NAME);
-	json cell_pop_params = json::parse(cell_pop_param_buf);
-	cell_pop_param_buf.close();
+	struct simulation model_sim;
+	init_simulation(&model_sim, sim_params);
+	run_simulation(&model_sim);
 
-	struct network model_network;
-	init_network(&model_network, cell_pop_params, cell_params);
-	init_network_connections(&model_network);
-	for (uint32_t i = 1; i < 101; i++)
-	{
-		calc_net_act_step(&model_network, i);
-		printf("%hhu ", model_network.output_layer.cells[10].spike);
-		if (i % 24 == 0 ) printf("\n");
-	}
-	printf("\n");
-	//gui_init(&argc, &argv, &model_cell);
-	//gui_run();
+	save_raster(model_sim.input_layer_raster,
+				model_sim.simulated_network.input_layer.num_cells
+				* model_sim.num_ts,
+				"input_layer_raster.bin");
+
+	save_raster(model_sim.hidden_layer_raster,
+				model_sim.simulated_network.hidden_layer.num_cells
+				* model_sim.num_ts,
+				"hidden_layer_raster.bin");
+
+	save_raster(model_sim.output_layer_raster,
+				model_sim.simulated_network.output_layer.num_cells
+				* model_sim.num_ts,
+				"output_layer_raster.bin");
+
+	free_simulation(&model_sim);
 
 	return 0;
 }

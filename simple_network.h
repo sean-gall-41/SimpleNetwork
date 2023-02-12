@@ -5,13 +5,12 @@
 #include "cell_pop.h"
 
 #define NUM_LAYERS 3
-#define NUM_NETWORK_PARAMS 4 /* not including arrays */
 
 /* three layer network model */
 struct network
 {
 	struct cell_pop input_layer;
-	struct cell_pop main_layer;
+	struct cell_pop hidden_layer;
 	struct cell_pop output_layer;
 };
 

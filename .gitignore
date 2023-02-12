@@ -1,2 +1,4 @@
+.venv/
 simp_network
 *.o
+*.bin

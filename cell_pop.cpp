@@ -64,6 +64,15 @@ void calc_cell_pop_act_step(struct cell_pop *in_cell_pop, struct cell_pop *curr_
 	}
 }
 
+void copy_spikes_to_raster(struct cell_pop *model_cell_pop, uint8_t *raster, uint32_t ts)
+{
+	for (uint32_t i = 0; i < model_cell_pop->num_cells; i++)
+	{
+		raster[ts * model_cell_pop->num_cells + i] = model_cell_pop->cells[i].spike;
+	}
+}
+
+
 void free_cell_pop_arrs(struct cell_pop *model_cell_pop)
 {
 	free(model_cell_pop->inputs);
