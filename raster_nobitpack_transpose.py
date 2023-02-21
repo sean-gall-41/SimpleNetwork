@@ -56,9 +56,9 @@ FR_SMOOTH_SIGMA = 10
 
 # dictionary of file basenames with corresponding cell nums
 cell_nums = {
-        "input_layer_raster.bin" : 8,
-        "hidden_layer_raster.bin" : 64,
-        "output_layer_raster.bin" : 16 
+        "input_layer_raster.bin" : 512,
+        "hidden_layer_raster.bin" : 1024,
+        "output_layer_raster.bin" : 64 
 }
 
 """

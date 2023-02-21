@@ -13,21 +13,21 @@
 	},
 	"network" : {
 		"input_layer": {
-			"num_cells": 8,
+			"num_cells": 512,
 			"max_num_input": 4,
 			"max_num_output": 1,
 			"prob_input": 1.00,
 			"prob_output": 0.25
 		},
 		"hidden_layer_1": {
-			"num_cells": 64,
-			"max_num_input": 1,
+			"num_cells": 1024,
+			"max_num_input": 2,
 			"max_num_output": 1,
-			"prob_input": 0.5,
+			"prob_input": 0.95,
 			"prob_output": 0.25
 		},
 		"output_layer": {
-			"num_cells": 16,
+			"num_cells": 64,
 			"max_num_input": 4,
 			"max_num_output": 1,
 			"prob_input": 1.00,
