@@ -25,9 +25,11 @@ void uint32_t_matrix_matrix_multiply(struct uint32_t_matrix *matrix_c,
 									 struct uint32_t_matrix *matrix_b);
 void uint32_t_matrix_transpose(struct uint32_t_matrix *matrix);
 uint32_t uint32_t_matrix_trace(struct uint32_t_matrix *matrix);
-
-// TODO: implement below
+void  uint32_t_matrix_LU_decomp(struct uint32_t_matrix *matrix,
+								struct uint32_t_matrix *lower,
+								struct uint32_t_matrix *upper);
 uint32_t uint32_t_matrix_determinant(struct uint32_t_matrix *matrix);
+
 uint32_t uint32_t_matrix_rank(struct uint32_t_matrix *matrix);
 uint32_t uint32_t_matrix_nullity(struct uint32_t_matrix *matrix);
 uint32_t uint32_t_matrix_dimension(struct uint32_t_matrix *matrix);
@@ -36,8 +38,11 @@ bool uint32_t_matrix_is_zero_matrix(struct uint32_t_matrix *matrix);
 bool uint32_t_matrix_is_diagonal(struct uint32_t_matrix *matrix);
 bool uint32_t_matrix_is_upper_triangular(struct uint32_t_matrix *matrix);
 bool uint32_t_matrix_is_lower_triangular(struct uint32_t_matrix *matrix);
+bool uint32_t_matrix_is_unit_upper_triangular(struct uint32_t_matrix *matrix);
+bool uint32_t_matrix_is_unit_lower_triangular(struct uint32_t_matrix *matrix);
 bool uint32_t_matrix_is_invertible(struct uint32_t_matrix *matrix);
 bool uint32_t_matrix_is_symmetric(struct uint32_t_matrix *matrix);
+bool uint32_t_matrix_is_equal_to(struct uint32_t_matrix *matrix_a, struct uint32_t_matrix *matrix_b);
 
 //void uint32_t_matrix_solve_linear_system
 
