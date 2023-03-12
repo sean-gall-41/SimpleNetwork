@@ -147,15 +147,15 @@ if __name__ == '__main__':
         
         rast_trials_x[rast_trials_x == 0] = np.nan
 
-        # plot the PSTH for this cell
+        # plot the rasters for this layer
         fig = plt.figure()
         # now do the raster
         ax_1 = plt.subplot(111)
         plt.scatter(rast_trials_x, rast_trials_y, 0.5, 'k')
-        plt.xlim((50, TRIAL_LEN - 50)) 
+        plt.xlim((50, TRIAL_LEN - 50))
         plt.ylim((-1, layer_num_cells+1))
-        ax_1.set_xlabel('cell number', fontsize=12)
-        ax_1.set_ylabel('trial number', fontsize=12)
+        ax_1.set_xlabel('time step (ms)', fontsize=12)
+        ax_1.set_ylabel('cell number', fontsize=12)
   
         # print which cell we've finished plotting and save to file
         #out_img_file_name = OUT_IMG_PATH + file_base_name + "_" + str(cell_id) + ".png" 
