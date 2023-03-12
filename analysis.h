@@ -1,5 +1,5 @@
-#ifndef ANALYSIS_H_H
-#define ANALYSIS_H_H
+#ifndef ANALYSIS_H_H_
+#define ANALYSIS_H_H_
 
 #include <stdint.h>
 
@@ -8,4 +8,4 @@ void plot_rasters(uint8_t *raster, uint32_t trial_len, uint32_t num_cells);
 void plot_mean_inst_fire_rate(uint8_t *raster, uint32_t trial_len, uint32_t num_cells);
 void plot_inst_fire_rate_cell(uint8_t *raster, uint32_t trial_len, uint32_t cell_id);
 
-#endif /* ANALYSIS_H_H */
+#endif /* ANALYSIS_H_H_ */
