@@ -11,7 +11,10 @@ using json = nlohmann::json;
 struct cell
 {
 	float tau_m;
-	float e_thresh;
+  float e_thresh;
+	float e_thresh_base;
+  float e_thresh_dec;
+  float e_thresh_max;
 	float e_leak;
 	float g_leak;
 	float e_syn;
