@@ -18,9 +18,11 @@ float rand_float(float min, float max)
 	return ((float)rand() / RAND_MAX) * (max - min) + min;
 }
 
-int spiked()
+// here the input thresh is a threshold variable that equals 
+// 1 when a spike is fired and then decays to zero
+int spiked(float thresh)
 {
-	return (rand_float(0.0, 1.0) < RATE_IN_S) ? 1 : 0;
+	return (rand_float(0.0, 1.0) < RATE_IN_S * (1 - thresh)) ? 1 : 0;
 }
 
 void reset_spikes(uint8_t spikes[], uint32_t num_ts)

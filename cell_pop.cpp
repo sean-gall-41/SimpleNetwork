@@ -37,7 +37,11 @@ void calc_cell_pop_poiss_step(struct cell_pop *input_pop, uint32_t ts)
 {
 	FOREACH_NELEM(input_pop->cells, input_pop->num_cells, cp)
 	{
-		cp->spike = spiked();
+    cp->e_thresh += (cp->e_thresh_base - cp->e_thresh) * cp->e_thresh_dec;
+    // this is wonky, ik, i will fix it by putting poiss cells into their own file :-)
+		cp->spike = spiked((cp->e_thresh - cp->e_thresh_base) / (cp->e_thresh_max - cp->e_thresh_base));
+    cp->e_thresh = cp->spike * cp->e_thresh_max
+                      + (1 - cp->spike) * cp->e_thresh;
 	}
 }
 

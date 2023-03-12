@@ -11,7 +11,7 @@ void init_rng(void);
 int rand_int(int min, int max);
 float rand_float(float min, float max);
 
-int spiked();
+int spiked(float thresh = 0);
 void reset_sim_arrs(float times[], uint8_t spikes[], uint32_t num_ts);
 void print_spikes(uint8_t spikes[], uint32_t num_ts);
 
