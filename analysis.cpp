@@ -134,7 +134,7 @@ void plot_mean_inst_fire_rate(uint8_t *raster, uint32_t trial_len, uint32_t num_
   show(); // doesn't actually show, just causes program to wait here ???
 }
 
-void plot_inst_fire_rate_cell(uint8_t *raster, uint32_t trial_len, uint32_t cell_id)
+void plot_inst_fire_rate_cell(uint8_t *raster, uint32_t trial_len, uint32_t num_cells, uint32_t cell_id)
 {
   int32_t gauss_filt_width = trial_len / 2;
   int32_t fr_smooth_min = -gauss_filt_width / 2;
@@ -151,14 +151,15 @@ void plot_inst_fire_rate_cell(uint8_t *raster, uint32_t trial_len, uint32_t cell
       FR_SMOOTH_SUGMA
       );
 
-  u8_rvec_t arma_raster(&raster[cell_id * trial_len], trial_len);
+  u8_mat_t raster2D(raster, num_cells, trial_len);
+  u8_rvec_t cell_raster = raster2D.row(cell_id);
   
-  f32_rvec_t arma_raster_float = arma::conv_to<f32_rvec_t>::from(arma_raster);
+  f32_rvec_t cell_raster_float = arma::conv_to<f32_rvec_t>::from(cell_raster);
 
-  f32_rvec_t fr_est = arma::conv(arma_raster_float,
+  f32_rvec_t fr_est = arma::conv(cell_raster_float,
                                  smooth_gauss_filt,
                                  "same");
-  float spike_train_mean = arma::sum(arma_raster_float) / trial_len;
+  float spike_train_mean = arma::sum(cell_raster_float) / trial_len;
   float fr_est_mean = arma::mean(fr_est);
   float scale_factor = spike_train_mean / fr_est_mean;
   fr_est *= scale_factor;
@@ -178,3 +179,28 @@ void plot_inst_fire_rate_cell(uint8_t *raster, uint32_t trial_len, uint32_t cell
   show(); // doesn't actually show, just causes program to wait here ???
 }
 
+void plot_raster_cell(uint8_t *raster, uint32_t trial_len, uint32_t num_cells, uint32_t cell_id)
+{
+  // slower, but copy the data to the local variable
+  u8_mat_t raster2D(raster, num_cells, trial_len);
+  u8_rvec_t cell_raster = raster2D.row(cell_id);
+
+  f32_rvec_t arma_raster_float = arma::conv_to<f32_rvec_t>::from(cell_raster);
+  
+  f32_rvec_t ts_indices = arma::regspace<f32_rvec_t>(0, trial_len-1);
+  arma_raster_float %= ts_indices;
+
+  std::vector<double> plottable_raster(arma_raster_float.begin(), arma_raster_float.end());
+  std::vector<double> ys(trial_len);
+
+  using namespace matplot;
+  auto f = figure(false);
+  auto ax = f->current_axes();
+  auto scatman = ax->scatter(plottable_raster, ys, 1.0);
+  scatman->marker_color("k");
+  ax->xlim({50, trial_len - 50});
+  ax->ylim({-0.5, 0.5});
+  ax->xlabel("time step (ms)");
+  ax->x_axis().label_font_size(12);
+  show(); // doesn't actually show, just causes program to wait here ???
+}
