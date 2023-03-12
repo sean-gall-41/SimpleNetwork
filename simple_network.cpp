@@ -68,9 +68,7 @@ void calc_net_act_step(struct network *model_network, uint32_t ts)
 	calc_cell_pop_poiss_step(&(model_network->input_layer), ts);
 	calc_cell_pop_act_step(&(model_network->input_layer), &(model_network->hidden_layer), ts);
 	calc_cell_pop_act_step(&(model_network->hidden_layer), &(model_network->output_layer), ts);
-  printf("%d : %d : %d\n", ts,
-                      model_network->hidden_layer.cells[0].t_since_last,
-                      model_network->hidden_layer.cells[0].spike);
+  //printf("%d : %d\n", ts, model_network->hidden_layer.cells[0].spike);
 }
 
 void free_network(struct network *model_network)

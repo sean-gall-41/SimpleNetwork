@@ -49,8 +49,7 @@ void calc_smooth_inst_fire_rates(
 void plot_rasters(uint8_t *raster, uint32_t trial_len, uint32_t num_cells)
 {
   // slower, but copy the data to the local variable
-  u8_mat_t raster2D(raster, trial_len, num_cells);
-  u8_mat_t raster2DT = raster2D.t();
+  u8_mat_t raster2D(raster, num_cells, trial_len);
 
   u32_mat_t rast_y = arma::ones<u32_mat_t>(num_cells, trial_len);
   u32_cvec_t cell_indices = arma::regspace<u32_cvec_t>(0, num_cells-1);
@@ -58,7 +57,7 @@ void plot_rasters(uint8_t *raster, uint32_t trial_len, uint32_t num_cells)
 
   rast_y.each_col() %= cell_indices;
   
-  u32_mat_t rast_x = arma::conv_to<u32_mat_t>::from(raster2DT);
+  u32_mat_t rast_x = arma::conv_to<u32_mat_t>::from(raster2D);
   rast_x.each_row() %= ts_indices;
 
   // flatten by concatenating rows, aka concatenating rasters for each cell
@@ -94,30 +93,30 @@ void plot_mean_inst_fire_rate(uint8_t *raster, uint32_t trial_len, uint32_t num_
   int32_t fr_smooth_min = -gauss_filt_width / 2;
   int32_t fr_smooth_max = gauss_filt_width / 2;
 
-  f32_cvec_t smooth_range = arma::regspace<f32_cvec_t>(
+  f32_rvec_t smooth_range = arma::regspace<f32_rvec_t>(
       fr_smooth_min,
       1,
       fr_smooth_max
       );
-  f32_cvec_t smooth_gauss_filt = arma::normpdf(
+  f32_rvec_t smooth_gauss_filt = arma::normpdf(
       smooth_range,
       FR_SMOOTH_MU,
       FR_SMOOTH_SUGMA
       );
 
-  u8_mat_t raster2D(raster, trial_len, num_cells);
+  u8_mat_t raster2D(raster, num_cells, trial_len);
   f32_mat_t raster2DFloat = arma::conv_to<f32_mat_t>::from(raster2D);
-  raster2DFloat.each_col([trial_len, &smooth_gauss_filt](f32_cvec_t &in_col){
-    f32_cvec_t fr_est = arma::conv(in_col,
+  raster2DFloat.each_row([trial_len, &smooth_gauss_filt](f32_rvec_t &in_row){
+    f32_rvec_t fr_est = arma::conv(in_row,
                                    smooth_gauss_filt,
                                    "same");
-    float spike_train_mean = arma::sum(in_col) / trial_len;
+    float spike_train_mean = arma::sum(in_row) / trial_len;
     float fr_est_mean = arma::mean(fr_est);
     float scale_factor = spike_train_mean / fr_est_mean;
     fr_est *= scale_factor;
     return fr_est;
   });
-  f32_cvec_t mean_fr = arma::mean(raster2DFloat, 1);
+  f32_rvec_t mean_fr = arma::mean(raster2DFloat);
   std::vector<double> plottable_mean_fr(mean_fr.begin(), mean_fr.end());
 
   using namespace matplot;
@@ -141,21 +140,22 @@ void plot_inst_fire_rate_cell(uint8_t *raster, uint32_t trial_len, uint32_t cell
   int32_t fr_smooth_min = -gauss_filt_width / 2;
   int32_t fr_smooth_max = gauss_filt_width / 2;
 
-  f32_cvec_t smooth_range = arma::regspace<f32_cvec_t>(
+  f32_rvec_t smooth_range = arma::regspace<f32_rvec_t>(
       fr_smooth_min,
       1,
       fr_smooth_max
       );
-  f32_cvec_t smooth_gauss_filt = arma::normpdf(
+  f32_rvec_t smooth_gauss_filt = arma::normpdf(
       smooth_range,
       FR_SMOOTH_MU,
       FR_SMOOTH_SUGMA
       );
 
-  u8_cvec_t arma_raster(&raster[cell_id * trial_len], trial_len);
-  f32_cvec_t arma_raster_float = arma::conv_to<f32_mat_t>::from(arma_raster);
+  u8_rvec_t arma_raster(&raster[cell_id * trial_len], trial_len);
+  
+  f32_rvec_t arma_raster_float = arma::conv_to<f32_rvec_t>::from(arma_raster);
 
-  f32_cvec_t fr_est = arma::conv(arma_raster_float,
+  f32_rvec_t fr_est = arma::conv(arma_raster_float,
                                  smooth_gauss_filt,
                                  "same");
   float spike_train_mean = arma::sum(arma_raster_float) / trial_len;
