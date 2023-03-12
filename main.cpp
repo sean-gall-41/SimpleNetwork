@@ -31,13 +31,13 @@ int main(int argc, char **argv)
   //plot_rasters(model_sim.hidden_layer_raster,
   //             model_sim.num_ts,
   //             model_sim.simulated_network.hidden_layer.num_cells);
-  //plot_rasters(model_sim.output_layer_raster,
-  //             model_sim.num_ts,
-  //             model_sim.simulated_network.output_layer.num_cells);
+  plot_rasters(model_sim.hidden_layer_raster,
+               model_sim.num_ts,
+               model_sim.simulated_network.hidden_layer.num_cells);
 
-  plot_inst_fire_rate_cell(model_sim.output_layer_raster,
-                           model_sim.num_ts,
-                           0);
+  //plot_inst_fire_rate_cell(model_sim.output_layer_raster,
+  //                         model_sim.num_ts,
+  //                         0);
 
   //plot_mean_inst_fire_rate(model_sim.input_layer_raster,
   //                         model_sim.num_ts,

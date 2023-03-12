@@ -10,27 +10,28 @@
 		"g_syn_max": 0.8,
 		"p_syn_max": 1.0,
 		"tau_s": 1.0,
+    "absolute_refract": 4,
 		"num_inputs": 16,
 		"num_outputs": 16
 	},
 	"network" : {
 		"input_layer": {
-			"num_cells": 64,
+			"num_cells": 16,
 			"max_num_input": 4,
 			"max_num_output": 1,
 			"prob_input": 1.00,
 			"prob_output": 0.25
 		},
 		"hidden_layer_1": {
-			"num_cells": 16,
-			"max_num_input": 4,
+			"num_cells": 8,
+			"max_num_input": 2,
 			"max_num_output": 1,
-			"prob_input": 0.95,
+			"prob_input": 1.00,
 			"prob_output": 0.25
 		},
 		"output_layer": {
 			"num_cells": 4,
-			"max_num_input": 4,
+			"max_num_input": 2,
 			"max_num_output": 1,
 			"prob_input": 1.00,
 			"prob_output": 0.25

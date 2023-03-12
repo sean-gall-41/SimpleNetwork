@@ -45,6 +45,7 @@ void calc_smooth_inst_fire_rates(
   //inst_fire_rates.transform([](float isi) { return (1.0 / isi) * 1000.0; });
 }
 
+// there may be a bug here. debug pls and thanks
 void plot_rasters(uint8_t *raster, uint32_t trial_len, uint32_t num_cells)
 {
   // slower, but copy the data to the local variable

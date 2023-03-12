@@ -22,10 +22,12 @@ void init_cell(struct cell *in_cell, json &cell_params)
 	in_cell->num_inputs    = cell_params["num_inputs"];
 	in_cell->num_outputs   = cell_params["num_outputs"];
 
-  in_cell->e_thresh = in_cell->e_thresh_base;
-	in_cell->voltage = in_cell->e_leak;
-	in_cell->spike = '\000';
-	in_cell->total_input = 0;
+	in_cell->voltage      = in_cell->e_leak;
+  in_cell->e_thresh     = in_cell->e_thresh_base;
+  in_cell->absolute_refract = cell_params["absolute_refract"];
+  in_cell->t_since_last = 0;
+	in_cell->spike        = 0;
+	in_cell->total_input  = 0;
 
 }
 
@@ -49,9 +51,15 @@ void calc_cell_spike(struct cell *in_cell, float prev_ts, float step_size)
 	in_cell->voltage += (k_1 + 2 * k_2 + 2 * k_3 + k_4)
 						* (step_size / 6);
 	in_cell->voltage = (in_cell->voltage > in_cell->e_thresh_max) ? in_cell->e_thresh_max : in_cell->voltage;
-	in_cell->spike  = (in_cell->voltage > in_cell->e_thresh) ? '\001' : '\000';
+  if (in_cell->t_since_last > in_cell->absolute_refract)
+  {
+	  in_cell->spike  = (in_cell->voltage > in_cell->e_thresh) ? '\001' : '\000';
+    in_cell->t_since_last = (in_cell->spike) ? 0 : in_cell->t_since_last;
+  }
+  else in_cell->spike = '\000';
   in_cell->e_thresh = in_cell->spike * in_cell->e_thresh_max
                     + (1 - in_cell->spike) * in_cell->e_thresh;
+  in_cell->t_since_last++;
 }
 
 float conductance_sum(struct cell *in_cell, float prev_ts, float prev_v)

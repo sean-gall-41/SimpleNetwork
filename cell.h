@@ -11,6 +11,7 @@ using json = nlohmann::json;
 struct cell
 {
 	float tau_m;
+	float voltage;
   float e_thresh;
 	float e_thresh_base;
   float e_thresh_dec;
@@ -21,14 +22,15 @@ struct cell
 	float g_syn_max;
 	float p_syn_max;
 	float tau_s;
+	/* network attribs */
 	uint32_t num_inputs;
 	uint32_t num_outputs;
+	uint32_t total_input;
+  uint32_t absolute_refract;
+  uint32_t t_since_last;
 	/* more channels*/
-	float voltage;
 	uint8_t spike;
 
-	/* network attribs */
-	uint32_t total_input;
 };
 
 void init_cell(struct cell *in_cell, json &cell_params);
