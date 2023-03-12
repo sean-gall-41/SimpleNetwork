@@ -14,6 +14,7 @@ typedef arma::Row<uint8_t> u8_rvec_t;
 typedef arma::Col<uint32_t> u32_cvec_t;
 typedef arma::Row<uint32_t> u32_rvec_t;
 typedef arma::Col<float> f32_cvec_t;
+typedef arma::Row<float> f32_rvec_t;
 typedef arma::Mat<float> f32_mat_t;
 typedef arma::Mat<uint8_t> u8_mat_t;
 typedef arma::Mat<uint32_t> u32_mat_t;
@@ -82,7 +83,9 @@ void plot_rasters(uint8_t *raster, uint32_t trial_len, uint32_t num_cells)
 
 /*
  * Computes the mean firing rate across cells and then plots the result
- *
+ * keep in mind that given the variance across cells, this gives a rather noisy result.
+ * could smooth again, but I don't think it would help -> maybe computing fr in two step
+ * method could be a better approach? ns
  */
 void plot_mean_inst_fire_rate(uint8_t *raster, uint32_t trial_len, uint32_t num_cells)
 {
@@ -123,7 +126,7 @@ void plot_mean_inst_fire_rate(uint8_t *raster, uint32_t trial_len, uint32_t num_
   auto ax = f->current_axes();
   auto plotman = ax->plot(plottable_mean_fr, "k-");
   ax->xlim({50, trial_len - 50});
-  ax->ylim({0.0, mean_fr.max()});
+  ax->ylim({0.0, mean_fr.max() + 0.2 * arma::range(mean_fr)});
   ax->xlabel("time step (ms)");
   ax->ylabel("Firing Rate (Hz)");
   ax->x_axis().label_font_size(12);
