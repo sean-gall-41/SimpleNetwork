@@ -27,7 +27,7 @@ void init_cell(struct cell *in_cell, json &cell_params)
   in_cell->absolute_refract = cell_params["absolute_refract"];
   in_cell->t_since_last = 0;
 	in_cell->spike        = 0;
-	in_cell->total_input  = 0;
+	in_cell->total_input  = 0.0;
 
 }
 
@@ -36,7 +36,7 @@ void calc_cell_spike(struct cell *in_cell, float prev_ts, float step_size)
 	float k_1, k_2, k_3, k_4;
 	k_1 = conductance_sum(in_cell,
 						  /*prev_ts*/0,
-						  in_cell->voltage); 
+						  in_cell->voltage);
 	k_2 = conductance_sum(in_cell,
 						  /*prev_ts + */(step_size / 2),
 						  in_cell->voltage + step_size * (k_1/2));

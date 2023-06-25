@@ -22,10 +22,10 @@ struct cell
 	float g_syn_max;
 	float p_syn_max;
 	float tau_s;
+	float total_input;
 	/* network attribs */
 	uint32_t num_inputs;
 	uint32_t num_outputs;
-	uint32_t total_input;
   uint32_t absolute_refract;
   uint32_t t_since_last;
 	/* more channels*/

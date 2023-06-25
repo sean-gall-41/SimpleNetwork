@@ -18,21 +18,21 @@ int main(int argc, char **argv)
 	json sim_params = json::parse(sim_param_buf);
 	sim_param_buf.close();
 
-  init_rng();
+  //init_rng();
 
 	struct simulation model_sim;
 	init_simulation(&model_sim, sim_params);
 	run_simulation(&model_sim);
 
-  //plot_rasters(model_sim.input_layer_raster,
-  //             model_sim.num_ts,
-  //             model_sim.simulated_network.input_layer.num_cells);
+  plot_rasters(model_sim.input_layer_raster,
+               model_sim.num_ts,
+               model_sim.simulated_network.input_layer.num_cells);
   //plot_rasters(model_sim.hidden_layer_raster,
   //             model_sim.num_ts,
   //             model_sim.simulated_network.hidden_layer.num_cells);
-  //plot_rasters(model_sim.output_layer_raster,
-  //             model_sim.num_ts,
-  //             model_sim.simulated_network.output_layer.num_cells);
+  plot_rasters(model_sim.output_layer_raster,
+               model_sim.num_ts,
+               model_sim.simulated_network.output_layer.num_cells);
 
   //plot_raster_cell(model_sim.hidden_layer_raster,
   //                 model_sim.num_ts,

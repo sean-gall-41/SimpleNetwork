@@ -44,7 +44,6 @@ static void init_cell_pop_input_connections(struct cell_pop *pre_layer, struct c
 			}
 		}
 	}
-  print_inputs(curr_layer);
 	set_destroy(&pre_ids);
 }
 
@@ -69,6 +68,7 @@ void calc_net_act_step(struct network *model_network, uint32_t ts)
 	calc_cell_pop_poiss_step(&(model_network->input_layer), ts);
 	//calc_cell_pop_act_step(&(model_network->input_layer), &(model_network->hidden_layer), ts);
 	calc_cell_pop_act_step(&(model_network->input_layer), &(model_network->output_layer), ts);
+  calc_cell_pop_weight_updates(&(model_network->input_layer), &(model_network->output_layer));
 }
 
 void free_network(struct network *model_network)

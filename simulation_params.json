@@ -20,14 +20,18 @@
 			"max_num_input": 0,
 			"max_num_output": 1,
 			"prob_input": 1.00,
-			"prob_output": 1.00
+			"prob_output": 1.00,
+      "init_weight_min": 0.45,
+      "init_weight_max": 0.55
 		},
 		"output_layer": {
 			"num_cells": 8,
-			"max_num_input": 1,
+			"max_num_input": 4,
 			"max_num_output": 0,
 			"prob_input": 1.00,
-			"prob_output": 1.00
+			"prob_output": 1.00,
+      "init_weight_min": 0.10,
+      "init_weight_max": 0.15
 		}
 	}
 }
