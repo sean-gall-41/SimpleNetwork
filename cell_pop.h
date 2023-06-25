@@ -15,6 +15,8 @@ struct cell_pop
 	float prob_output;
 	uint32_t *inputs; /* input connectivity array */
 	uint32_t *outputs; /* output connectivity array */
+  uint32_t *input_weights; // for now we test weights on binary input
+  uint32_t *output_weights;
 
 	struct cell *cells;
 };

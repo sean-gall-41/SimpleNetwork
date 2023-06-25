@@ -26,6 +26,11 @@ void init_cell_pop_arrs(struct cell_pop *model_cell_pop, json &cell_params)
 	memset(model_cell_pop->inputs, UINT_MAX, model_cell_pop->max_num_input * model_cell_pop->num_cells * sizeof(uint32_t));
 	memset(model_cell_pop->outputs, UINT_MAX, model_cell_pop->max_num_output * model_cell_pop->num_cells * sizeof(uint32_t));
 
+	model_cell_pop->input_weights  = (uint32_t *)calloc(model_cell_pop->max_num_input * model_cell_pop->num_cells, sizeof(uint32_t));
+	model_cell_pop->output_weights = (uint32_t *)calloc(model_cell_pop->max_num_output * model_cell_pop->num_cells, sizeof(uint32_t));
+	memset(model_cell_pop->input_weights, 0, model_cell_pop->max_num_input * model_cell_pop->num_cells * sizeof(uint32_t));
+	memset(model_cell_pop->output_weights, 0, model_cell_pop->max_num_output * model_cell_pop->num_cells * sizeof(uint32_t));
+
 	model_cell_pop->cells = (struct cell *)calloc(model_cell_pop->num_cells, sizeof(struct cell));
 	FOREACH_NELEM(model_cell_pop->cells, model_cell_pop->num_cells, cp)
 	{
@@ -42,12 +47,11 @@ void calc_cell_pop_poiss_step(struct cell_pop *input_pop, uint32_t ts)
     {
       // this is wonky, ik, i will fix it by putting poiss cells into their own file :-)
 	  	cp->spike = spiked((cp->e_thresh - cp->e_thresh_base) / (cp->e_thresh_max - cp->e_thresh_base));
-      cp->t_since_last = (cp->spike) ? 0 : cp->t_since_last;
+      cp->t_since_last = (cp->spike) ? 0 : ++cp->t_since_last;
     }
     else cp->spike = '\000';
     cp->e_thresh = cp->spike * cp->e_thresh_max
                       + (1 - cp->spike) * cp->e_thresh;
-    cp->t_since_last++;
 	}
 }
 
@@ -87,19 +91,16 @@ void free_cell_pop_arrs(struct cell_pop *model_cell_pop)
 {
 	free(model_cell_pop->inputs);
 	free(model_cell_pop->outputs);
+	free(model_cell_pop->input_weights);
+	free(model_cell_pop->output_weights);
 	free(model_cell_pop->cells);
 }
 
 void print_inputs(struct cell_pop *model_cell_pop)
 {
-	for (uint32_t i = 0; i < model_cell_pop->num_cells; i++)
-	{
-		for (uint32_t j = 0; j < model_cell_pop->max_num_input; j++)
-		{
-			uint32_t val = model_cell_pop->inputs[i * model_cell_pop->max_num_input + j];
-			printf("%u ", val);
-		}
-		printf("\n");
-	}
+  for (uint32_t i = 0; i < model_cell_pop->max_num_input * model_cell_pop->num_cells; i++)
+  {
+		printf("input id: %d, input val: %d\n", i, model_cell_pop->inputs[i]);
+  }
 }
 

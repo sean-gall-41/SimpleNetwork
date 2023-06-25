@@ -10,7 +10,7 @@
 struct network
 {
 	struct cell_pop input_layer;
-	struct cell_pop hidden_layer;
+	//struct cell_pop hidden_layer;
 	struct cell_pop output_layer;
 };
 

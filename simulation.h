@@ -8,7 +8,7 @@ struct simulation {
 	uint32_t num_ts;
 	struct network simulated_network;
 	uint8_t *input_layer_raster;
-	uint8_t *hidden_layer_raster;
+	//uint8_t *hidden_layer_raster;
 	uint8_t *output_layer_raster;
 };
 

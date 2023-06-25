@@ -5,14 +5,14 @@
 static void init_raster_data(struct simulation *sim)
 {
 	sim->input_layer_raster  = (uint8_t *)calloc(sim->simulated_network.input_layer.num_cells * sim->num_ts, sizeof(uint8_t));
-	sim->hidden_layer_raster = (uint8_t *)calloc(sim->simulated_network.hidden_layer.num_cells * sim->num_ts, sizeof(uint8_t));
+	//sim->hidden_layer_raster = (uint8_t *)calloc(sim->simulated_network.hidden_layer.num_cells * sim->num_ts, sizeof(uint8_t));
 	sim->output_layer_raster = (uint8_t *)calloc(sim->simulated_network.output_layer.num_cells * sim->num_ts, sizeof(uint8_t));
 }
 
 static void collect_raster_data(struct simulation *sim, uint32_t ts)
 {
 	copy_spikes_to_raster(&(sim->simulated_network.input_layer), sim->input_layer_raster, ts);
-	copy_spikes_to_raster(&(sim->simulated_network.hidden_layer), sim->hidden_layer_raster, ts);
+	//copy_spikes_to_raster(&(sim->simulated_network.hidden_layer), sim->hidden_layer_raster, ts);
 	copy_spikes_to_raster(&(sim->simulated_network.output_layer), sim->output_layer_raster, ts);
 }
 
@@ -48,6 +48,6 @@ void free_simulation(struct simulation *sim)
 {
 	free_network(&(sim->simulated_network));
 	free(sim->input_layer_raster);
-	free(sim->hidden_layer_raster);
+	//free(sim->hidden_layer_raster);
 	free(sim->output_layer_raster);
 }

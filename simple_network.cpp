@@ -9,7 +9,7 @@
 void init_network(struct network *model_network, json &cell_pop_params, json &cell_params)
 {
 	init_cell_pop(&(model_network->input_layer), cell_pop_params["input_layer"], cell_params);
-	init_cell_pop(&(model_network->hidden_layer), cell_pop_params["hidden_layer_1"], cell_params);
+	//init_cell_pop(&(model_network->hidden_layer), cell_pop_params["hidden_layer_1"], cell_params);
 	init_cell_pop(&(model_network->output_layer), cell_pop_params["output_layer"], cell_params);
 }
 
@@ -44,6 +44,7 @@ static void init_cell_pop_input_connections(struct cell_pop *pre_layer, struct c
 			}
 		}
 	}
+  print_inputs(curr_layer);
 	set_destroy(&pre_ids);
 }
 
@@ -51,11 +52,11 @@ static void init_cell_pop_input_connections(struct cell_pop *pre_layer, struct c
 void init_network_connections(struct network *model_network)
 {
 	struct cell_pop *il = &(model_network->input_layer);
-	struct cell_pop *ml = &(model_network->hidden_layer);
+	//struct cell_pop *ml = &(model_network->hidden_layer);
 	struct cell_pop *ol = &(model_network->output_layer);
 
-	init_cell_pop_input_connections(il, ml); // init main layer inputs
-	init_cell_pop_input_connections(ml, ol); // init output layer inputs
+	init_cell_pop_input_connections(il, ol); // init main layer inputs
+	//init_cell_pop_input_connections(ml, ol); // init output layer inputs
 }
 
 /*
@@ -66,15 +67,14 @@ void init_network_connections(struct network *model_network)
 void calc_net_act_step(struct network *model_network, uint32_t ts)
 {
 	calc_cell_pop_poiss_step(&(model_network->input_layer), ts);
-	calc_cell_pop_act_step(&(model_network->input_layer), &(model_network->hidden_layer), ts);
-	calc_cell_pop_act_step(&(model_network->hidden_layer), &(model_network->output_layer), ts);
-  //printf("%d : %d\n", ts, model_network->hidden_layer.cells[0].spike);
+	//calc_cell_pop_act_step(&(model_network->input_layer), &(model_network->hidden_layer), ts);
+	calc_cell_pop_act_step(&(model_network->input_layer), &(model_network->output_layer), ts);
 }
 
 void free_network(struct network *model_network)
 {
 	free_cell_pop_arrs(&(model_network->input_layer));
-	free_cell_pop_arrs(&(model_network->hidden_layer));
+	//free_cell_pop_arrs(&(model_network->hidden_layer));
 	free_cell_pop_arrs(&(model_network->output_layer));
 }
 
